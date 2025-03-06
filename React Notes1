@@ -1,5 +1,101 @@
 # React study notes 1
+
 ## conditional rendering 
-### with &&
+
+In an example of creating a footer for a pizza website, we use three ways to 
+demonstrate how to make conditional rendering. This is a page for a pizza website.
+If current time is between open hour and close hour, the footer shows "we are open",
+otherwise, the footer shows "we are closed".
+
 ### with Ternaries
+
+function Footer() {
+  const hour = new Date().getHours(); 
+  const openHour = 12;
+  const closeHour = 22;
+
+  const isOpen = hour >= openHour && hour <= closeHour;
+
+// Ternarie syntax: conditions ? (if met, execute these lines) : (if not met, execute these lines)
+
+  return (
+    <footer className="footer">
+      {isOpen ? (
+        <div className="order">
+          <p>{new Date().toLocaleTimeString()}.We are currently open!</p>
+          <button className="btn">Order</button>
+        </div>
+      ) : (
+        <div className="order">
+          <p>
+            We're happy to welcome you between {openHour}:00 and {closeHour}:00.
+          </p>
+        </div>
+      )}
+    </footer>
+  );
+}
 ### with Multiple Returns
+
+function Footer() {
+  const hour = new Date().getHours(); 
+  const openHour = 12;
+  const closeHour = 22;
+
+  const isOpen = hour >= openHour && hour <= closeHour;
+
+  if (!isOpen)    // if/else can be used outside JSX.
+    return (
+      <footer className="footer">
+        <div className="order">
+          <p>
+            We're happy to welcome you between {openHour}:00 and {closeHour}:00.
+          </p>
+        </div>
+      </footer>
+    );
+if(isOpen)
+  return (
+    <footer className="footer">
+      <div className="order">
+          <p>{new Date().toLocaleTimeString()}.We are currently open!</p>
+          <button className="btn">Order</button>
+        </div>
+    </footer>
+  );
+}
+
+### with &&
+
+function Footer() {
+  const hour = new Date().getHours(); 
+  const openHour = 12;
+  const closeHour = 22;
+
+  const isOpen = hour >= openHour && hour <= closeHour;
+
+// since && only returns results when the conditions are met, we use if/else outside of JSX when 
+// the conditions before && are not met.
+
+  if (!isOpen)
+    return (
+      <footer className="footer">
+        <div className="order">
+          <p>
+            We're happy to welcome you between {openHour}:00 and {closeHour}:00.
+          </p>
+        </div>
+      </footer>
+    );
+
+  return (
+    <footer className="footer">
+      {isOpen && (
+        <div className="order">
+          <p>{new Date().toLocaleTimeString()}.We are currently open!</p>
+          <button className="btn">Order</button>
+        </div>
+      ) }
+    </footer>
+  );
+}
