@@ -1,2 +1,45 @@
 # React Notes 2
-## Props
+## Destructuring Props 
+
+const fruits=[
+{name:Apple,color:red,price:2,photoName:Fruit/Apple.jpg,},
+{name:Orange,color:orange,price:3,photoName:Fruit/Orange.jpg,}
+]
+
+
+function App() {
+  return (
+    <div className="container">
+      <Header />
+      <Menu />
+      <Footer />
+    </div>
+  );
+}
+
+function Menu() {
+  
+  return (
+  <Fruit fruitObj={fruits[1]} key={fruits[1].name}/>
+  <Fruit fruitOjb={fruits[2]} key={fruits[2].name}/>
+   )
+}
+
+//instead of putting props inside the brackets: Fruit(props), 
+//when using: props.fruitObj.name
+//we destrure the props, and put specific properties there: Fruit({fruitObj,key}),
+//when using: fruitObj.name
+
+function Fruit({fruitObj}){
+
+<li>
+<img src={fruitObj.photoName} alt={fruitObj.name}/>
+<h3>{fruitObj.color}</h3>
+<p>{fruitObj.price}</p>
+</li>
+
+}
+ 
+
+
+
