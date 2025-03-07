@@ -1,0 +1,70 @@
+# States
+
+## There are some notes inside an example's comments about how to set and update states in React.
+   Two key points: 1 always use setState function to update states.
+                   2 always put a new value of the state inside the setState funtion, in the format of a callback function, 
+                   
+### examples                     
+import { useState } from "react";
+
+const messages = ["Learn React", "Apply for jobs", "Invest your new income"];
+
+export default function App() {
+  const [step, setStep] = useState(1);
+
+  //1 inside useState(1) is a default value that we want for the state;
+  //setStep is the function we use to change the state of step.
+  //useState is a hook. It is only allowed to be called on the top level the App();
+  //not in other parts inside App(),such as in a loop, or inside another function, or inside if/else statements.
+  //we should only update state using setState function, not manully.
+
+  const [id, setId] = useState({ name: "Harry" });
+  function handlePrevious() {
+    // setStep(step === 1 ? step : step - 1);//we prefer not to update state based on current value because of asynchronous updates.
+    setStep((s) => (s === 1 ? s : s - 1)); //instead,we use a call back function inside setState function.
+    setId(id.name === "Hermione" ? { name: "Ron" } : { name: "Harry" });
+  }
+
+  function handleNext() {
+    setStep(step === messages.length ? step : step + 1);
+    // setTest((test.name = "Ron")); this is wrong:
+    // React does not track mutations to existing objects.
+    // This means React won't re-render the component even though the data of test object's state value has changed.
+    // The purpose of setState is to replace the state with a new value, not to modify the existing state directly.
+    // We should not modify the current state directly,because react would not know that something has changed.
+    // Instead, we provide a new state of an object or a value to the setState function.
+    // This will make React to detect the change and re-render the component.
+
+    setId(id.name === "Harry" ? { name: "Ron" } : { name: "Hermione" });
+  }
+
+  return (
+    <div className="steps">
+      <div className="numbers">
+        <div className={step >= 1 ? "active" : ""}>1</div>
+        <div className={step >= 2 ? "active" : ""}>2</div>
+        <div className={step >= 3 ? "active" : ""}>3</div>
+      </div>
+
+      <p className="message">
+        Step:{step}:{messages[step - 1]}
+        {`, ${id.name}`}
+      </p>
+
+      <div className="buttons">
+        <button
+          style={{ backgroundColor: "#7950f2", color: "#fff" }}
+          onClick={handlePrevious}
+        >
+          Previous
+        </button>
+        <button
+          style={{ backgroundColor: "#7950f2", color: "#fff" }}
+          onClick={handleNext}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}
