@@ -1,0 +1,25 @@
+# React Notes 5
+
+## sort method applications
+
+1 const items=[{description: "apple", id: 1741735938992, packed: false},
+               {description: "pear", id: 1741735942221, packed: false},
+               {description: "book", id: 1741735945703, packed: false}]
+
+let sortedItems;
+
+  if (sortBy === "input") {
+    sortedItems = items;
+  }
+
+  if (sortBy === "description") {
+    sortedItems = items
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description)); // to sort items based on alphabetical order. 
+  }
+
+  if (sortBy === "packed") {
+    sortedItems = items
+      .slice()
+      .sort((a, b) => Number(a.packed) - Number(b.packed)); // to turn boolean value into number.
+  }
