@@ -1,0 +1,77 @@
+#React Notes 6
+## 1 function StarRating({ maxRating = 5 }) {
+  //we can set a default value for the prop, in this case, it is 5.
+
+## 2 <p style={textStyle}>{rating || ""}</p>
+      {/* || returns the first truthy value it encounters or the last value 
+      if the two are all falsy */}
+
+## 3 <span role="button" style={starStyle}> 
+    Normally, a <button> element has built-in accessibility features:
+
+     1 It is focusable (tabindex=0 by default).
+     2 It is clickable and activates on Enter/Space keys.
+     3 Screen readers announce it as a "button."
+
+However, a <span> is just a plain text container and lacks these behaviors. By adding role="button", you:
+    1 Tell screen readers that the <span> should be treated as a button.
+    2 Improve accessibility for users who navigate using assistive devices.
+     
+     Key points: 
+     1 role="button": Tells assistive technologies this behaves like a button.
+     2 onClick: Adds interactive behavior. 
+
+##4 Array.from()
+
+### example1 :
+
+const numbers = [10, 20, 30, 40, 50];
+
+const result = Array.from(numbers, (num, i) => (
+  <span key={i}>{num * 2} (Index: {i})</span>
+));
+
+console.log(result);
+//////
+Expected output as React JSX:
+
+[
+  <span key={0}>20 (Index: 0)</span>,
+  <span key={1}>40 (Index: 1)</span>,
+  <span key={2}>60 (Index: 2)</span>,
+  <span key={3}>80 (Index: 3)</span>,
+  <span key={4}>100 (Index: 4)</span>
+]
+
+### example2 :
+
+Array.from({ length: 5 }, (_, i) => <span>S{i + 1}</span>)
+
+Output:
+
+[
+  <span>S1</span>,
+  <span>S2</span>,
+  <span>S3</span>,
+  <span>S4</span>,
+  <span>S5</span>
+]
+
+## 5 How React render an array wrapped by <div> 
+<div>
+  {[<span>s1</span>, <span>s2</span>, <span>s3</span>]}
+</div>
+JSX does not treat the array as a separate entity—instead, it extracts the elements from the array and renders them in sequence inside the <div>.
+In other words, it unwraps the array and places the individual elements in the DOM.
+This means the browser will see:
+
+<div>
+  <span>s1</span>
+  <span>s2</span>
+  <span>s3</span>
+</div>
+
+Since <span> is an inline element, it appears as:
+
+s1s2s3
+
