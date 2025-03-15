@@ -1,0 +1,14 @@
+# React Notes 7 State updates
+
+## 1 State updates are asynchronous, so direct setState(value) can lead to stale state issues.
+   2 Functional updates ensure that each state update uses the latest value.
+   3 Always use setState((prev) => newValue) when updating state multiple times in a single function.
+
+### example 
+
+function handleTripleInc() {
+    setLikes((likes) => likes + 1);
+    setLikes((likes) => likes + 1);
+    setLikes((likes) => likes + 1);
+}
+
