@@ -1,0 +1,95 @@
+# React Notes 8
+## 1 Async function
+
+### 1 async function fetchMovie() {
+      const res = await fetch(
+        http://www.omdbapi.com/?apikey=${KEY}&s=interstellar
+      );
+      const data = await res.json();
+      setMovies(data.Search);
+    }
+what does this function return?
+
+Returns a Promise because:
+
+1 It is declared as an async function, which always returns a Promise.
+2 The function does not explicitly return anything, so it implicitly returns Promise<void> (a Promise that resolves to undefined).
+
+### 2 function () {
+    async function fetchMovie() {
+      const res = await fetch(
+        http://www.omdbapi.com/?apikey=${KEY}&s=interstellar
+      );
+      const data = await res.json();
+      setMovies(data.Search);
+    }
+    fetchMovie();
+  }
+what does this function return? 
+
+It declares an async function inside itself: fetchMovie().
+It immediately calls fetchMovie().
+Since fetchMovie() is async, it returns a Promise.
+However, the outer function does not return anything.
+
+Because there is no return statement in the outer function, it implicitly returns undefined.
+The fetchMovie() function runs asynchronously, but the outer function doesn’t await it or return its Promise.
+
+##2 destructuring
+
+const movie = {
+  Title: "Inception",
+  Year: "2010",
+  Poster: "https://example.com/inception.jpg",
+  Runtime: "148 min",
+  imdbRating: "8.8",
+  Plot: "A thief enters the dreams of others to steal secrets.",
+  Released: "16 Jul 2010",
+  Actors: "Leonardo DiCaprio, Joseph Gordon-Levitt, Ellen Page",
+  Director: "Christopher Nolan",
+  Genre: "Action, Adventure, Sci-Fi"
+};
+
+
+const {
+    Title: title,
+    Year: year,
+    Poster: poster,
+    Runtime: runtime,
+    imdbRating,
+    Plot: plot,
+    Released: released,
+    Actors: actors,
+    Director: director,
+    Genre: genre,
+  } = movie;
+
+if it is destructuring, what is it doing here?
+
+This is destructuring assignment in JavaScript, specifically object destructuring. 
+It extracts properties from the movie object and assigns them to new variables.
+
+Takes the movie object and extracts its properties.
+Some properties are renamed (e.g., Title → title, Year → year).
+Some properties retain their original names (e.g., imdbRating).
+
+If we didn't use destructuring, we would have to write:
+
+const title = movie.Title;
+const year = movie.Year;
+const poster = movie.Poster;
+const runtime = movie.Runtime;
+const imdbRating = movie.imdbRating;
+const plot = movie.Plot;
+const released = movie.Released;
+const actors = movie.Actors;
+const director = movie.Director;
+const genre = movie.Genre;
+
+Key Features of This Destructuring:
+✅ Extracts multiple properties from movie in one step.
+✅ Renames some properties (e.g., Title → title) while keeping others unchanged (imdbRating).
+✅ Avoids redundant property access like movie.Title or movie.Year each time.
+
+
+
