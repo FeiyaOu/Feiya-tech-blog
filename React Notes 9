@@ -1,0 +1,129 @@
+# React Notes 9 
+  Function, States in React
+
+## 1 what is a callback function? what are other function types?
+
+What is a Callback Function?
+A callback function is a function passed as an argument to another function and is executed later inside that function.
+
+Why use callbacks?
+
+Callbacks allow asynchronous execution (e.g., in setTimeout or fetch).
+They enable reusability and modularity in functions.
+They are commonly used in event listeners, array methods, and API calls.
+
+example 1:
+function greet(name, callback) {
+    console.log("Hello, " + name);
+    callback();
+}
+
+function sayBye() {
+    console.log("Goodbye!");
+}
+
+greet("Alice", sayBye);
+
+Output:
+Hello, Alice
+Goodbye!
+
+Here, sayBye is the callback function passed to greet.
+
+Callback Function	Passed as an argument and executed later.
+
+Other function types:
+Anonymous Function: 	A function without a name.
+Arrow Function (=>)	: Concise function syntax, no this binding.
+Higher-Order Function:	Takes or returns another function.
+IIFE: Runs immediately after definition.
+Generator Function:	Can pause execution (yield).
+Async Function: 	Uses async/await for asynchronous code.
+
+## 2 what does a pure function mean?
+
+A pure function is a function that always returns the same output for the same input and has no side effects.
+
+  
+Characteristics of a Pure Function:
+
+1 Deterministic: Given the same input, it will always return the same output.
+2 No Side Effects: It does not modify external variables, change state, or interact with external data (e.g., database, DOM, API calls).
+3 Does Not Modify Arguments: It does not mutate the input but instead returns a new value.
+
+example:
+
+function add(a, b) {
+    return a + b;
+}
+
+console.log(add(2, 3)); // 5
+console.log(add(2, 3)); // 5 (same output every time)
+✅ It always produces the same result for the same inputs.
+✅ It does not modify anything outside the function.
+
+example of an impure function:
+let total = 0;
+
+function addToTotal(value) {
+    total += value;  // Modifies an external variable (side effect)
+    return total;
+}
+
+console.log(addToTotal(5)); // 5
+console.log(addToTotal(5)); // 10 (output changes based on external state)
+
+It depends on an external variable (total).
+The output changes every time it is called.
+
+## 3 why do we say states are immutable? why do we say states persist across re-renders?
+
+Why Do We Say States Are Immutable in React?
+In React, state is considered immutable because 
+it should never be directly modified. 
+Instead, React requires you to use the 
+setState function (or useState setter) to update state,
+ensuring that React correctly tracks and handles changes.
+
+Why is State Immutable?
+Prevents Unintended Side Effects (modifying state directly may lead to unpredictable behavior).
+Ensures Correct UI Updates (React detects state changes and schedules re-renders).
+Optimized Performance (React can compare previous and new state efficiently using reconciliation).
+Works Well with Functional Updates (setState((prev) => prev + 1), ensuring you always work with the latest state).
+
+Why Do We Say State Persists Across Re-renders?
+In React, state is preserved across re-renders, meaning it does not reset when the component re-renders.
+Every render gets the latest version of the state, stored internally by React.
+
+example:
+
+function Counter() {
+    const [count, setCount] = useState(0);
+
+    console.log("Component re-rendered!");
+
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => setCount(count + 1)}>Increment</button>
+        </div>
+    );
+}
+
+When you click the button, setCount updates the state.
+The component re-renders, but count persists across re-renders.
+State is stored internally by React and does not reset on each render.
+
+What Does NOT Persist Across Re-renders?
+If a variable is not stored in useState, it resets on every render.
+
+Every time React re-renders, counter resets to 0 because it's a regular variable, not state.
+
+Key takeaways:
+✅ State is immutable (must be updated using setState).
+✅ Direct mutation does not trigger re-renders.
+✅ State persists across re-renders (it doesn't reset unless explicitly updated).
+✅ Only useState and useReducer maintain values between renders.
+
+
+
