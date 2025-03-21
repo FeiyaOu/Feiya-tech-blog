@@ -1,0 +1,146 @@
+# React Notes 10  States and useReducer hook
+
+## 1 States are immutable and persist across re-renders
+
+### 1 Why Do We Say States Are Immutable in React?
+In React, state is considered immutable because it should never be directly modified.
+Instead, React requires you to use the setState function (or useState setter) to update state, 
+ensuring that React correctly tracks and handles changes.
+
+State Should Not Be Mutated Directly
+If you modify state directly, React won’t detect the change, and it may cause unexpected behavior.
+
+### 2 Why Do We Say State Persists Across Re-renders?
+In React, state is preserved across re-renders, meaning it does not reset when the component re-renders.
+Every render gets the latest version of the state, stored internally by React.
+
+example:
+
+function Counter() {
+    const [count, setCount] = useState(0);
+
+    console.log("Component re-rendered!");
+
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <button onClick={() => setCount(count + 1)}>Increment</button>
+        </div>
+    );
+}
+
+When you click the button, setCount updates the state.
+The component re-renders, but count persists across re-renders.
+State is stored internally by React and does not reset on each render.
+
+### 3 What Does NOT Persist Across Re-renders?
+If a variable is not stored in useState, it resets on every render.
+
+example:
+
+function Example() {
+    let counter = 0;  // ❌ This resets on every render
+
+    return (
+        <button onClick={() => counter++}>Click me</button>
+    );
+}
+
+Every time React re-renders, counter resets to 0 because it's a regular variable, not state.
+
+## 2 useReducer hook
+
+###1 In useReducer hook in React, can I say when dispatch is called, it is actually calling reducer function ?
+
+Yes! When dispatch is called, it actually calls the reducer function. 
+
+How useReducer Works
+
+The useReducer hook follows this pattern:
+
+const [state, dispatch] = useReducer(reducer, initialState);
+
+dispatch(action) triggers the reducer function.
+The reducer function takes the current state and the action, then returns a new state.
+
+Breaking It Down Step by Step
+1️⃣ Defining the Reducer Function
+A reducer function takes two arguments:
+
+state (current state)
+action (an object that describes what to do)
+
+Example:
+function counterReducer(state, action) {
+    switch (action.type) {
+        case "increment":
+            return { count: state.count + 1 };
+        case "decrement":
+            return { count: state.count - 1 };
+        default:
+            return state;
+    }
+}
+
+2️⃣ Initializing useReducer
+We pass the counterReducer function into useReducer:
+
+const [state, dispatch] = useReducer(counterReducer, { count: 0 });
+
+state stores { count: 0 } initially.
+dispatch is a function we call to send actions to the reducer.
+
+3️⃣ Calling dispatch (Which Calls reducer)
+When we call:
+
+dispatch({ type: "increment" });
+
+React calls counterReducer(state, action) internally.
+state is { count: 0 }.
+action.type is "increment", so the reducer returns { count: 1 }.
+React updates the state and re-renders the component.
+
+Visualizing the Flow
+1️⃣ User clicks a button → dispatch is called
+2️⃣ React calls the reducer function (counterReducer)
+3️⃣ Reducer returns a new state based on the action
+4️⃣ React updates the component with new state
+
+Example Component Using useReducer
+import React, { useReducer } from "react";
+
+function counterReducer(state, action) {
+    switch (action.type) {
+        case "increment":
+            return { count: state.count + 1 };
+        case "decrement":
+            return { count: state.count - 1 };
+        default:
+            return state;
+    }
+}
+
+export default function Counter() {
+    const [state, dispatch] = useReducer(counterReducer, { count: 0 });
+
+    return (
+        <div>
+            <p>Count: {state.count}</p>
+            <button onClick={() => dispatch({ type: "increment" })}>+</button>
+            <button onClick={() => dispatch({ type: "decrement" })}>-</button>
+        </div>
+    );
+}
+✅ Clicking a button calls dispatch → dispatch calls counterReducer → reducer updates state → component re-renders! 
+
+### 2 The arguments in dispatch is actually passed to action in reducer function? 
+
+Yes! The argument passed to dispatch is received as the action parameter in the reducer function.
+
+How dispatch Passes the Argument to the Reducer:
+
+When you call dispatch(action), React automatically calls the reducer function and passes the current state and action to it.
+
+ The argument in dispatch(action) is passed as the action parameter in the reducer function.
+ The reducer function processes this action object and updates the state accordingly.
+ You can pass additional properties in the action object (e.g., value, payload).
