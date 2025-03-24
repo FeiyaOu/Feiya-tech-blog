@@ -1,0 +1,79 @@
+# CSS notes 1
+
+## 1 What is line-height in CSS?
+The line-height property in CSS controls the vertical spacing between lines of text — basically, how tall each line box is.
+
+Why Use It?
+To improve readability of text
+
+To control layout and alignment
+
+To ensure consistent spacing across elements with text
+
+example:
+
+p {
+  font-size: 16px;
+  line-height: 24px;
+}
+
+Here, each line in the paragraph will have 24px of height,
+even though the text itself is only 16px tall — giving it 8px of breathing room (typically 4px above and 4px below).
+
+## 2 space-between, space-around,space-evenly
+
+These are values for the justify-content property in Flexbox 
+and CSS Grid, and they all control how extra space is distributed along the main axis (usually horizontal).
+
+
+### 1 space-between
+
+space-between is a value for the justify-content property in 
+Flexbox or Grid, which controls horizontal (or main axis) alignment of child elements.
+
+What Does It Do?
+
+It distributes space between flex items:
+
+➤First item is aligned to the start.
+➤Last item is aligned to the end.
+➤Equal space is added between the items.
+➤No space is added before the first or after the last item.
+
+### 2 space-around
+
+Space is added around items.
+
+That means:
+➤ Each item gets equal space on both sides
+➤ But space at the ends is half of what's between items (because it’s only on one side)
+
+###3 space-evenly
+
+➤Equal space is added between all items and at the ends.
+➤Everything is perfectly spaced out.
+
+## 3 clamp
+
+The clamp() function lets you set a responsive value that has a minimum, a preferred, and a maximum.
+
+example:
+
+width: clamp(80rem, 80%, 90rem);
+
+This uses the modern CSS clamp() function — and it's super powerful for responsive design.
+
+## 4 margin-right:auto
+
+.some-element {
+  margin-right: auto;
+}
+
+It pushes the element to the left (because you're filling up the right side with auto spacing).
+
+Any elements after it (in flex or inline layout) get pushed to the right only if layout allows it.
+
+
+
+
+
