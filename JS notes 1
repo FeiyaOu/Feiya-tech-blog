@@ -1,8 +1,9 @@
 # JS notes 1
+
 ## 1 Arguments object 
 
 ### in regular functions
-In a regular function, arguments is a built-in array-like object
+#### 1 In a regular function, arguments is a built-in array-like object
 that contains all arguments passed to that function:
 
 function regularFn(a, b) {
@@ -10,9 +11,62 @@ function regularFn(a, b) {
 }
 regularFn(1, 2);
 
-But if you try this in an arrow function:
+#### 2 But if you try this in an arrow function:
 
 const arrowFn = (a, b) => {
   console.log(arguments); // ❌ ReferenceError: arguments is not defined
 };
 arrowFn(1, 2);
+
+You'll get a ReferenceError, because arrow functions don’t have their own arguments object.
+
+#### 3 So Where Does arguments Come From in an Arrow Function?
+
+If you try to use arguments inside an arrow function, it will look for arguments in the parent (lexical) scope.
+
+Example:
+function outerFunction() {
+  const arrow = () => {
+    console.log(arguments); // ✅ Refers to outerFunction's arguments
+  };
+  arrow(3, 4);
+}
+outerFunction(1, 2); // Logs: [Arguments] { '0': 1, '1': 2 }
+
+## 2 ...args
+
+### 1 The ...args syntax (also called the rest parameter) is a modern,
+cleaner alternative to the old arguments object — and it works perfectly 
+in both regular functions and arrow functions.
+
+...args collects all arguments into an actual array (not array-like like arguments).
+
+So you can use all array methods directly (map, filter, etc).
+
+
+### 2 If you’re writing an arrow function and want to handle multiple arguments, use the rest parameter:
+
+const arrowFn = (...args) => {
+  console.log(args); // [1, 2, 3]
+};
+arrowFn(1, 2, 3);
+
+This gives you a real array of arguments.
+
+### 3 In a regular functions:
+
+function printArgs(...args) {
+  console.log(args);
+}
+
+printArgs(1, 2, 3); // Logs: [1, 2, 3]
+
+
+
+
+
+
+
+
+
+
