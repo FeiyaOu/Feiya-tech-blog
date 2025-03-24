@@ -1,0 +1,53 @@
+# JS Notes 2 
+
+## 1 function declaration
+
+A function declaration is the traditional way of defining a named function using the function keyword.
+
+function greet(name) {
+  return "Hello, " + name;
+}
+
+
+Characteristics:
+Hoisted: Function declarations are hoisted to the top of their scope, so you can call them before they appear in the code.
+
+Named: They must have a name.
+
+Example:
+
+sayHello(); // ✅ Works, even before it's defined
+
+function sayHello() {
+  console.log("Hello!");
+}
+
+
+## 2 Function Expression
+A function expression is when a function is assigned to a variable, often as an anonymous function (but not always).
+
+const greet = function(name) {
+  return "Hello, " + name;
+};
+
+or
+
+const greet = function greetFunc(name) {
+  return "Hello, " + name;
+};
+
+
+
+Characteristics:
+Not hoisted: Function expressions are not hoisted. You must define them before calling them.
+
+Can be anonymous: The function doesn't need a name (but it can have one).
+
+Can be assigned to variables, passed as arguments, returned from functions, etc.
+
+
+## 3 Arrow Function = Function Expression
+
+const greet = (name) => "Hello, " + name;
+
+
