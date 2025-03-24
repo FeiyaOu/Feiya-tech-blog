@@ -1,0 +1,18 @@
+# JS notes 1
+## 1 Arguments object 
+
+### in regular functions
+In a regular function, arguments is a built-in array-like object
+that contains all arguments passed to that function:
+
+function regularFn(a, b) {
+  console.log(arguments); // [Arguments] { '0': 1, '1': 2 }
+}
+regularFn(1, 2);
+
+But if you try this in an arrow function:
+
+const arrowFn = (a, b) => {
+  console.log(arguments); // ❌ ReferenceError: arguments is not defined
+};
+arrowFn(1, 2);
