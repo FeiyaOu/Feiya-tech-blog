@@ -1,0 +1,43 @@
+# JS notes 4
+
+## event propagation
+
+1 There is a button on a map. before I set an onClick function on the map, when I click the button, there will be a change, let's call it change 1. then I set an onClick function on the map, so when I click the map, there will be change2. now when I click the button, it also triggers change2, not change 1, how to fix this
+
+you're describing a classic issue in event propagation in the browser — specifically event bubbling in the DOM.
+
+What's Happening?
+When you click the button on top of the map, the browser does the following:
+
+Fires the click event on the button.
+
+Then it bubbles up and also fires click on the parent element — in your case, the map.
+
+So:
+
+✅ The button click triggers change1 (expected).
+
+❌ But it also bubbles up and triggers change2 on the map (not expected).
+
+How to Fix It: Stop Event Bubbling
+Inside the button’s onClick handler, you just need to stop the event from bubbling up to the map.
+
+in React
+
+<button onClick={(e) => {
+e.stopPropagation(); // 👈 prevents the map's click from firing
+// your change1 logic
+}}>
+Click me
+</button>
+
+in Vanilla JS
+
+button.addEventListener('click', function(e) {
+e.stopPropagation(); // 👈 stops the event from bubbling to the map
+// change1 logic
+});
+
+What e.stopPropagation() does:
+It tells the browser:
+“Hey, I’ve handled this click here. Don’t pass it up the DOM tree to parent elements.”
