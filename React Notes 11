@@ -1,0 +1,41 @@
+# React Notes 11 
+
+## 1 useSearchParams hook in React
+
+1 I have a question about useSearchParams hook in React. what is the data type of searchParams, why do we use get to extract specific info while we can just write object in setSearchParams to update it?
+
+const [searchParams, setSearchParams] = useSearchParams();
+
+searchParams = current query params (read-only)
+
+setSearchParams = function to update the query params
+
+What is the data type of searchParams?
+
+It's NOT a plain object.
+
+It’s a built-in browser class designed to work with query strings.
+
+You can do things like:
+
+searchParams.get("user"); // "Alice"
+searchParams.has("id"); // true/false
+searchParams.toString(); // "user=Alice&id=123"
+
+If you tried searchParams.user or searchParams["user"], it won't work — because searchParams is not a plain JavaScript object.
+
+So then why can we pass an object to setSearchParams()?
+💡 Because setSearchParams is smart!
+It accepts:
+
+A plain object ✅
+
+A URLSearchParams instance ✅
+
+setSearchParams({ user: "Alice", theme: "dark" });
+
+React Router will convert this object into a real URLSearchParams behind the scenes:
+
+?user=Alice&theme=dark
+
+So it's a convenience feature. You read using URLSearchParams methods like .get(), but you can write using a plain object because setSearchParams handles the conversion.
