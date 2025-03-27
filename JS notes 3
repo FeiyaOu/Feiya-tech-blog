@@ -1,0 +1,123 @@
+# JS Notes 3 
+
+## 1 How arrow functions inherit this from their lexical scope
+
+In this code:
+if (true) {
+var hisName = 'Ron';
+const Harry = {
+hisName: 'Harry',
+
+    greet: () => {
+      console.log(this);
+      console.log(`Hey ${this.hisName}`);
+    },
+
+};
+
+Harry.greet();
+}
+
+console.log(hisName);
+
+1 Why the this in this.hisName is window, not "if" block scope?
+
+Arrow functions don’t have their own this.
+Instead, they inherit this from their lexical scope — i.e., the surrounding function or global scope.
+
+You might expect this to refer to the Harry object — but that only works if you use a regular function.
+
+2 Why var hisName = 'Ron' works outside the if block?
+
+Because var is function-scoped, not block-scoped.
+So hisName is available outside the if block.
+If you had used let or const, it would be block-scoped and not accessible outside.
+
+3 The greet arrow function is defined inside an if block. So shouldn't this refer to the block scope (the if block) instead of the global scope?
+
+Block scopes (like if {}) don’t create a new this context.
+Only functions and classes do that — not blocks.
+
+So even though greet is defined inside an if block, the if block doesn't have its own this context to give it.
+
+4 So what is the outer scope of greet?
+
+The arrow function greet inherits this from the surrounding function or global scope.
+
+But since this is top-level code, and there is no surrounding function, it falls back to the global scope.
+
+Therefore, this === window in a browser (or global in Node).
+
+5 When we say arrow functions inherit this from the closest enclosing function scope, does that mean this inside the arrow function refers to the object that called that enclosing function?
+
+Yes, but with a twist:
+It refers to whatever this was in the scope where the arrow function was defined, not called.
+
+"closest enclosing function scope" means:
+Find the nearest surrounding regular function where this has meaning, and use that.
+
+example:
+const obj = {
+name: "Ron",
+greet() {
+const inner = () => {
+console.log(this.name);
+};
+inner();
+}
+};
+
+obj.greet(); // Logs: "Ron"
+
+In this example:
+
+inner is an arrow function.
+
+It was defined inside the greet() regular function.
+
+So it inherits this from greet(), and in greet(), this is obj.
+
+Arrow functions don’t care about who calls them —
+they care about where they are defined.
+
+example 2:
+
+const Harry = {
+name: "Harry",
+greet: () => {
+console.log(this); // ❌ not Harry
+},
+};
+
+Harry.greet(); // `this` is still global (window or undefined in strict mode)
+
+Even though you're calling Harry.greet(), the arrow function ignores it. It only knows that it was defined in the global scope, so this is window (or undefined in strict mode).
+
+example 3:
+const outer = {
+name: "Outer",
+greet: function () {
+const inner = {
+name: "Inner",
+sayHi: () => {
+console.log(this.name);
+},
+};
+inner.sayHi(); // Logs: "Outer" ✅
+},
+};
+
+outer.greet();
+
+Even though inner.sayHi() was called from inner, it inherits this from greet(), where it was defined — so this.name is "Outer".
+
+Conclusion:
+so , to find "this" for arrow function , we first find where it is defined, which is the outside function scope or global scope, then we decide what is "this" for the outside function scope or global scope, and this final "this", is "this " for the arrow function.
+
+In other words:
+1 Find where the arrow function is defined
+2 Look at the surrounding (enclosing) scope where it was defined
+3 Determine what this is in that outer scope
+
+ps: when calling a regular function without binding to any object,
+"this" is undefined in strict mode, Windows in non strict mode.
