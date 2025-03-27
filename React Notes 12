@@ -1,0 +1,202 @@
+# React Notes 12 
+
+## side effect re-rendering prevent: useEffect
+
+case: in this code, the component is always re rendered, why?
+
+/////////////////
+import { useParams, useSearchParams } from "react-router-dom";
+import styles from "./City.module.css";
+import { useCities } from "../contexts/CitiesContext";
+
+const formatDate = (date) =>
+new Intl.DateTimeFormat("en", {
+day: "numeric",
+month: "long",
+year: "numeric",
+weekday: "long",
+}).format(new Date(date));
+
+function City() {
+const { currentCity, getCity } = useCities();
+
+// TEMP DATA
+// const currentCity = {
+// cityName: "Lisbon",
+// emoji: "🇵🇹",
+// date: "2027-10-31T15:59:59.138Z",
+// notes: "My favorite city so far!",
+// };
+
+const { id } = useParams();
+console.log(id);
+
+getCity(id);
+
+// const [searchParams, setSearchParams] = useSearchParams();
+// console.log(searchParams);
+
+// const lat = searchParams.get("lat");
+// const lng = searchParams.get("lng");
+
+const { cityName, emoji, date, notes } = currentCity;
+
+return (
+
+<div className={styles.city}>
+<div className={styles.row}>
+<h6>City name</h6>
+<h3>
+<span>{emoji}</span> {cityName}
+</h3>
+{/_ <h6>{id}</h6>
+<h6>
+lat:{lat},lng:{lng}
+</h6> _/}
+</div>
+
+      <div className={styles.row}>
+        <h6>You went to {cityName} on</h6>
+        <p>{formatDate(date || null)}</p>
+      </div>
+
+      {notes && (
+        <div className={styles.row}>
+          <h6>Your notes</h6>
+          <p>{notes}</p>
+        </div>
+      )}
+
+      <div className={styles.row}>
+        <h6>Learn more</h6>
+        <a
+          href={https://en.wikipedia.org/wiki/${cityName}}
+          target="_blank"
+          rel="noreferrer"
+        >
+          Check out {cityName} on Wikipedia &rarr;
+        </a>
+      </div>
+
+      <div>{/* <ButtonBack /> */}</div>
+    </div>
+
+);
+}
+
+export default City;
+////////////////
+You're wondering why your City component is re-rendering on every render, even though nothing seems to be changing explicitly.
+
+Let’s go step by step and figure out why it's happening, and how to fix it.
+
+Suspect #1: getCity(id); is called directly in the render body
+
+getCity(id);
+
+This is the main reason your component keeps re-rendering.
+
+❗ In React, any side-effect (like fetching data or updating context) should always be inside a useEffect(), not directly in the render body.
+
+Why?
+
+Because every time React renders the component:
+
+It runs the function body again.
+
+getCity(id) gets called again.
+
+If getCity updates context or state, it triggers another re-render.
+
+That causes getCity(id) to be called again...
+
+...and now you’re in a re-render loop
+
+How to fix it:
+Move getCity(id) into a useEffect, like this:
+
+import { useEffect } from "react";
+
+useEffect(() => {
+if (id) getCity(id);
+}, [id, getCity]);
+
+This tells React: "Only call getCity(id) when the id changes" — not on every render.
+
+hy useEffect matters here:
+React uses useEffect to isolate side-effects from the render logic.
+Fetching data, subscribing to something, manually modifying state — all that belongs in useEffect.
+
+2 In React, any side-effect (like fetching data or updating context) should always be inside a useEffect(), not directly in the render body. what does updating context mean?
+
+In React, when we say:
+
+"You should not update context in the render body"
+
+We're referring to modifying the value inside a Context Provider — either directly or indirectly — in a way that triggers a re-render.
+
+Let’s Back Up: What is React Context?
+React Context is a way to share state globally across components without passing props manually at every level.
+
+Example:
+
+const ThemeContext = React.createContext();
+
+function App() {
+const [theme, setTheme] = useState("light");
+
+return (
+<ThemeContext.Provider value={{ theme, setTheme }}>
+<Page />
+</ThemeContext.Provider>
+);
+}
+
+Here:
+
+theme is context state
+
+setTheme() is a way to update the context
+
+Any component can consume and call setTheme(...) to update the context
+
+So What Does "Updating Context" Mean?
+It means doing something like this inside a render:
+
+function SomeComponent() {
+const { setTheme } = useContext(ThemeContext);
+
+// ❌ BAD: Updating context directly in render
+setTheme("dark");
+
+return <div>...</div>;
+}
+
+Why is this bad?
+Because:
+
+setTheme() triggers a re-render
+
+The component re-renders again
+
+Which calls setTheme() again
+
+🔁 You end up in an infinite re-render loop
+
+Proper Way: Use useEffect to Update Context
+You should only update context in response to something — not on every render:
+
+useEffect(() => {
+setTheme("dark");
+}, []); // ✅ only runs once when component mounts
+
+Or based on some condition:
+useEffect(() => {
+if (userPrefersDark) {
+setTheme("dark");
+}
+}, [userPrefersDark]);
+
+Bottom Line:
+🛑 Never call setContext (like setTheme, setUser, setCity, etc.) directly inside the render body.
+✅ Instead, use useEffect() or an event handler (like a button click) to update it.
