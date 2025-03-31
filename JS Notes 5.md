@@ -1,4 +1,4 @@
-# JS Notes X
+# JS Notes 5
 
 ## Set
 
@@ -73,7 +73,7 @@ Passes multiple arguments, and Set ignores the rest — only "🍎" is used.
 
 ###6 what is the logic behind the design of sets in JS?
 
-avaScript engines (like V8 in Chrome) usually implement Set as a hash-based data structure, very similar to how Map works.
+JavaScript engines (like V8 in Chrome) usually implement Set as a hash-based data structure, very similar to how Map works.
 
 Here’s what’s happening under the hood:
 When you do:
